@@ -31,7 +31,7 @@ public class Keyboard {
 		pressed[e.getKeyCode()] = true;
 	}
 	
-	public static void keyReleaased(KeyEvent e) {
+	public static void keyReleased(KeyEvent e) {
 		pressed[e.getKeyCode()] = false;
 	}
 	
