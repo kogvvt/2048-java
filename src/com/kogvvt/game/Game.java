@@ -12,9 +12,6 @@ import java.awt.image.renderable.RenderableImage;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
-import jdk.internal.jshell.tool.StopDetectingInputStream;
-import jdk.javadoc.internal.tool.Start;
-
 public class Game extends JPanel implements KeyListener, Runnable {
 
 	
@@ -37,8 +34,13 @@ public class Game extends JPanel implements KeyListener, Runnable {
 	}
 	
 	private void update() {
-		
-		
+		if(Keyboard.pressed[KeyEvent.VK_SPACE]) {
+			System.out.println("space");
+		}
+		if(Keyboard.typed(KeyEvent.VK_RIGHT)) {
+			System.out.println("q");
+		}
+		Keyboard.update();
 		
 	}
 	
@@ -97,8 +99,6 @@ public class Game extends JPanel implements KeyListener, Runnable {
 			
 			// FPS Timer
 			if(System.currentTimeMillis()-fpsTimer >1000) {
-				System.out.printf("%d fps %d udpates",fps,updates);
-				System.out.println();
 				fps = 0;
 				updates = 0;
 				fpsTimer += 1000;
@@ -127,13 +127,13 @@ public class Game extends JPanel implements KeyListener, Runnable {
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		// TODO Auto-generated method stub
+		Keyboard.keyPressed(e);
 		
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
+		Keyboard.keyReleased(e);
 		
 	}
 	
