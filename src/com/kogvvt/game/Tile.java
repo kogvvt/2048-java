@@ -3,6 +3,7 @@ package com.kogvvt.game;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
+import com.kogvvt.game.Point;
 import java.awt.image.BufferedImage;
 
 
@@ -19,13 +20,16 @@ public class Tile {
 	private Color background;
 	private Color text;
 	private Font font;
+	private Point slideTo;
 	private int x;
 	private int y;
+	private boolean canCombine;
 	
 	public Tile(int value, int x, int y) {
 		this.value = value;
 		this.x = x;
 		this.y = y;
+		setSlideTo(new Point(x,y));
 		tileImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		drawImage();
 	}
@@ -116,6 +120,26 @@ public class Tile {
 	
 	public int getValue() {
 		return value;
+	}
+	
+	public void setValue(int value) {
+		this.value = value;
+	}
+
+	public boolean canCombine() {
+		return canCombine;
+	}
+
+	public void setCanCombine(boolean canCombine) {
+		this.canCombine = canCombine;
+	}
+
+	public Point getSlideTo() {
+		return slideTo;
+	}
+
+	public void setSlideTo(Point slideTo) {
+		this.slideTo = slideTo;
 	}
 
 }

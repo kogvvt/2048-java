@@ -2,6 +2,10 @@ package com.kogvvt.game;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import com.kogvvt.game.Point;
+
+import sun.nio.cs.ext.ISCII91;
+
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.util.Random;
@@ -117,22 +121,138 @@ public class GameBoard {
 		}
 	}
 	
+	
+	
+	private boolean move(int row, int col, int horizontalDirection, int verticalDirection, Direction dir) {
+		boolean canMove = false;
+		Tile current = board[row][col];
+		if(current ==null) return false;
+		boolean move = true;
+		int newCol = col;
+		int newRow = row;
+		while(move) {
+			newCol += horizontalDirection;
+			newRow += verticalDirection;
+			if(checkOutOfBounds(dir, newRow, newCol)) break;
+			if(board[newRow][newCol] == null) {
+				board[newRow][newCol] = current;
+				board[newRow-verticalDirection][newCol-horizontalDirection] = null;
+				board[newRow][newCol].setSlideTo(new Point(newRow, newCol));
+			}else if(board[newRow][newCol].getValue() == current.getValue() && board[newRow][newCol].canCombine()) {
+				board[newRow][newCol].setCanCombine(false);
+				board[newRow][newCol].setValue(board[newRow][newCol].getValue()*2);
+				canMove = true;
+				board[newRow-verticalDirection][newCol-horizontalDirection] = null;
+				board[newRow][newCol].setSlideTo(new Point(newRow, newCol));
+				//board[newRow][newCol].setCombineAnimation(true);
+				//add to score
+			}
+			else {
+				move = false;
+			}
+		}
+		
+		return canMove;
+	}
+	
+	private boolean checkOutOfBounds(Direction dir, int row, int col) {
+		if(dir == Direction.LEFT) {
+			return col<0;
+		}else if(dir == Direction.RIGHT) {
+			return col > cols - 1;
+		}else if(dir == Direction.UP) {
+			return row >0;
+		}else if (dir == Direction.DOWN) {
+			return row > rows-1;
+		}
+		return false;
+	}
+	
+	private void moveTiles(Direction dir) {
+		boolean canMove = false;
+		int horizontalDirection = 0;
+		int verticalDirection = 0;
+		
+		if(dir == Direction.LEFT) {
+			horizontalDirection = -1;
+			for(int row = 0; row<rows; row++) {
+				for(int col = 0; col<cols; col++) {
+					if(!canMove) {
+						canMove = move(row, col, horizontalDirection, verticalDirection, dir);
+					}else move(row, col, horizontalDirection, verticalDirection, dir);
+				}
+			}
+		}
+		
+		else if(dir == Direction.RIGHT) {
+			horizontalDirection = 1;
+			for(int row = 0; row<rows; row++) {
+				for(int col = cols-1; col>=0; col--) {
+					if(!canMove) {
+						canMove = move(row, col, horizontalDirection, verticalDirection, dir);
+					}else move(row, col, horizontalDirection, verticalDirection, dir);
+				}
+			}
+		}
+		
+		else if(dir == Direction.UP) {
+			verticalDirection = -1;
+			for(int row = 0; row<rows; row++) {
+				for(int col = 0; col<cols; col++) {
+					if(!canMove) {
+						canMove = move(row, col, horizontalDirection, verticalDirection, dir);
+					}else move(row, col, horizontalDirection, verticalDirection, dir);
+				}
+			}
+		}
+		
+		else if(dir == Direction.DOWN) {
+			verticalDirection = 1;
+			for(int row = rows-1; row>=0; row--) {
+				for(int col = 0; col<cols; col++) {
+					if(!canMove) {
+						canMove = move(row, col, horizontalDirection, verticalDirection, dir);
+					}else move(row, col, horizontalDirection, verticalDirection, dir);
+				}
+			}
+		}else {
+			System.out.println(dir + "is not a valid direction!");
+		}
+		
+		for(int row = 0; row < rows; row++) {
+			for(int col = 0 ; col<cols;col++) {
+				Tile current = board[row][col];
+				if(current == null) continue;
+				current.setCanCombine(true);
+			}
+		}
+		if(canMove) {
+			spawnRandom();
+			//check if the game is over
+		}
+		
+	}
+	
 	private void checkKeys() {
 		//move tiles to left, right, up and down
 		
 		if(Keyboard.typed(KeyEvent.VK_LEFT)) {
+			moveTiles(Direction.LEFT);
 			if(!hasStarted) hasStarted = true;
 		}
 		
 		if(Keyboard.typed(KeyEvent.VK_RIGHT)) {
+			moveTiles(Direction.RIGHT);
 			if(!hasStarted) hasStarted = true;
 		}
 		
 		if(Keyboard.typed(KeyEvent.VK_UP)) {
+			moveTiles(Direction.UP);
 			if(!hasStarted) hasStarted = true;
 		}
 		
 		if(Keyboard.typed(KeyEvent.VK_DOWN)) {
+			moveTiles(Direction.DOWN);
 			if(!hasStarted) hasStarted = true;
 		}
 	
