@@ -7,7 +7,7 @@ public class Keyboard {
 	public static boolean[] pressed = new boolean[256];
 	public static boolean[] previous = new boolean[256];
 	
-	private Keyboard() {}
+	
 	
 	
 	public static void update() {

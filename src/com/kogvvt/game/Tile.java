@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import com.kogvvt.game.Point;
 import java.awt.image.BufferedImage;
+import java.lang.*;
 
 
 public class Tile {
@@ -36,6 +37,33 @@ public class Tile {
 	
 	private void drawImage() {
 		Graphics2D g = (Graphics2D)tileImage.getGraphics();
+		
+		/* TODO: 
+		 * 
+		 * Color[]	colorArray;
+		 * colorArray = new Color[12];
+		 * 
+		 * colorArray[0] = burgundowykutacz17
+		 * write all background colors and text colors
+		 * 
+		 *
+		 * for(int i = 1 ;i<=2048; i*=2){
+		 * 		
+		 * 		if(value == i){
+		 * 			background = colorArray[Math.log(i)/Math.log(2)];
+		 *			 	if(value>4){
+		 * 					text = new Color (0xfffffffff);
+		 * 				}
+		 * 		}
+		 * 
+		 * }
+		 * 
+		 * 
+		 * 
+		 * 
+		 * 
+		 * 
+		 */
 		switch(value) {
 			case 2:
 				background = new Color(0xe9e9e9);
