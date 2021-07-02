@@ -10,9 +10,9 @@ import java.lang.*;
 
 public class Tile {
 	
-	public static final int width = 80;
-	public static final int height = 80;
-	public static final int slideSpeed = 20;
+	public static final int width = 100;
+	public static final int height = 100;
+	public static final int slideSpeed = 30;
 	public static final int arcWidth = 15;
 	public static final int arcHeight = 15;
 	
@@ -24,17 +24,21 @@ public class Tile {
 	private Point slideTo;
 	private int x;
 	private int y;
-	private boolean canCombine;
+	
+	
+	private boolean canCombine = true;
 	
 	public Tile(int value, int x, int y) {
 		this.value = value;
 		this.x = x;
 		this.y = y;
-		setSlideTo(new Point(x,y));
+		slideTo = new Point(x,y);
 		tileImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		drawImage();
 	}
 	
+	
+
 	private void drawImage() {
 		Graphics2D g = (Graphics2D)tileImage.getGraphics();
 		
@@ -58,12 +62,8 @@ public class Tile {
 		 * 
 		 * }
 		 * 
-		 * 
-		 * 
-		 * 
-		 * 
-		 * 
 		 */
+		
 		switch(value) {
 			case 2:
 				background = new Color(0xe9e9e9);
@@ -152,6 +152,7 @@ public class Tile {
 	
 	public void setValue(int value) {
 		this.value = value;
+		drawImage();
 	}
 
 	public boolean canCombine() {
@@ -168,6 +169,22 @@ public class Tile {
 
 	public void setSlideTo(Point slideTo) {
 		this.slideTo = slideTo;
+	}
+	
+	public int getX() {
+		return x;
+	}
+
+	public void setX(int x) {
+		this.x = x;
+	}
+
+	public int getY() {
+		return y;
+	}
+
+	public void setY(int y) {
+		this.y = y;
 	}
 
 }

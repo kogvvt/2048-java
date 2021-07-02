@@ -3,12 +3,10 @@ package com.kogvvt.game;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import com.kogvvt.game.Point;
-
-import sun.nio.cs.ext.ISCII91;
-
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.util.Random;
+import java.util.concurrent.locks.AbstractOwnableSynchronizer;
 
 public class GameBoard {
 	
@@ -112,7 +110,7 @@ public class GameBoard {
 				Tile current = board[row][col];
 				if(current == null) continue;
 				current.update();
-				//reset position
+				resetPosition(current, row, col);
 				if(current.getValue() == 2048) {
 					won = true;
 				}
@@ -121,6 +119,39 @@ public class GameBoard {
 		}
 	}
 	
+	private void resetPosition(Tile current, int row, int col) {
+		if(current == null) return;
+		
+		int x = getTileX(col);
+		int y = getTileY(row);
+		
+		int distX = current.getX() - x;
+		int distY = current.getY() - y;
+		
+		if(Math.abs(distX) < Tile.slideSpeed) {
+			current.setX(current.getX() - distX); 
+		}
+		
+		if(Math.abs(distY) < Tile.slideSpeed) {
+			current.setY(current.getY() - distY);
+		}
+		
+		if(distX < 0) {
+			current.setX(current.getX() + Tile.slideSpeed);
+		}
+		
+		if(distX > 0) {
+			current.setX(current.getX() - Tile.slideSpeed);
+		}
+		
+		if(distY < 0) {
+			current.setY(current.getY() + Tile.slideSpeed);
+		}
+		
+		if(distY > 0 ) {
+			current.setY(current.getY() - Tile.slideSpeed);
+		}
+	}
 	
 	
 	private boolean move(int row, int col, int horizontalDirection, int verticalDirection, Direction dir) {
@@ -138,6 +169,7 @@ public class GameBoard {
 				board[newRow][newCol] = current;
 				board[newRow-verticalDirection][newCol-horizontalDirection] = null;
 				board[newRow][newCol].setSlideTo(new Point(newRow, newCol));
+				canMove = true;
 			}else if(board[newRow][newCol].getValue() == current.getValue() && board[newRow][newCol].canCombine()) {
 				board[newRow][newCol].setCanCombine(false);
 				board[newRow][newCol].setValue(board[newRow][newCol].getValue()*2);
@@ -161,7 +193,7 @@ public class GameBoard {
 		}else if(dir == Direction.RIGHT) {
 			return col > cols - 1;
 		}else if(dir == Direction.UP) {
-			return row >0;
+			return row <0;
 		}else if (dir == Direction.DOWN) {
 			return row > rows-1;
 		}
@@ -195,10 +227,12 @@ public class GameBoard {
 			}
 		}
 		
+		
+	
 		else if(dir == Direction.UP) {
 			verticalDirection = -1;
 			for(int row = 0; row<rows; row++) {
-				for(int col = 0; col<cols; col++) {
+				for(int col = 0; col < cols; col++) {
 					if(!canMove) {
 						canMove = move(row, col, horizontalDirection, verticalDirection, dir);
 					}else move(row, col, horizontalDirection, verticalDirection, dir);
@@ -229,8 +263,49 @@ public class GameBoard {
 		if(canMove) {
 			spawnRandom();
 			//check if the game is over
+			checkDead();
 		}
 		
+	}
+	
+	private void checkDead() {
+		for(int row = 0; row < rows; row++) {
+			for(int col = 0; col < cols; col++) {
+				if(board[row][col] == null) return;
+				if(checkSurroundingTiles(row, col, board[row][col])) {
+					return;
+				}
+			}
+		}
+		
+		dead = true;
+		//setHighScore(score)
+	}
+	
+	private boolean checkSurroundingTiles(int row, int col, Tile current) {
+		if(row>0) {
+			Tile check = board[row-1][col];
+			if(check==null)return true;
+			if(current.getValue() == check.getValue()) return true;
+		}
+		if(row < rows - 1) {
+			Tile check = board[row+1][col];
+			if(check == null) return true;
+			if(current.getValue() == check.getValue()) return true;
+		}
+		if(col >0) {
+			Tile check = board[row][col-1];
+			if(check == null) return true;
+			if(current.getValue() == check.getValue()) return true;
+			
+		}
+		if(col < cols-1) {
+			Tile check = board[row][col +1];
+			if(check == null) return true;
+			if(current.getValue() == check.getValue()) return true;
+			
+		}
+		return false;
 	}
 	
 	private void checkKeys() {
