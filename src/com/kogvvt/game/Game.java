@@ -119,7 +119,7 @@ public class Game extends JPanel implements KeyListener, Runnable {
 
 	@Override
 	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
+
 		
 	}
 
