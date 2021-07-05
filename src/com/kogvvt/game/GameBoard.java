@@ -74,9 +74,6 @@ public class GameBoard {
 			FileWriter output = new FileWriter(file);
 			BufferedWriter writer = new BufferedWriter(output);
 			writer.write("" + 0);
-			// create fastest time
-			writer.newLine();
-			writer.write("" + Integer.MAX_VALUE);
 			writer.close();
 
 		} catch (Exception e) {
@@ -93,8 +90,6 @@ public class GameBoard {
 			}
 			BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(f)));
 			highScore = Integer.parseInt(reader.readLine());
-			// read fastest time
-			fastestMS = Long.parseLong(reader.readLine());
 			reader.close();
 
 		} catch (Exception e) {
@@ -112,13 +107,6 @@ public class GameBoard {
 
 			writer.write("" + highScore);
 			writer.newLine();
-
-			if (elapsedMS <= fastestMS && won) {
-				writer.write("" + elapsedMS);
-
-			} else {
-				writer.write("" + fastestMS);
-			}
 
 			writer.close();
 
