@@ -244,7 +244,7 @@ public class GameBoard {
 			} else {
 				hourFormat = "" + hours;
 			}
-			hourFormat += "";
+			hourFormat += ":";
 		}
 
 		String minuteFormat;
@@ -252,7 +252,7 @@ public class GameBoard {
 		if (minutes >= 1) {
 			millis -= minutes * 60000;
 			if (minutes < 10) {
-				minuteFormat = "0" + minutes;
+				minuteFormat = "0" + minutes + ":";
 			} else {
 				minuteFormat = "" + minutes;
 			}
